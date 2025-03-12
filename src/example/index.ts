@@ -1,7 +1,7 @@
-import whois from "../index.js"
+import whois from "../index.ts";
 
-const url = 'google.com'
+const url = "google.com";
 
-const result = await whois({ url })
+const result = await whois({ url });
 
-console.log(result)
+console.log(result);
