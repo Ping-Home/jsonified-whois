@@ -1,7 +1,25 @@
 import whois from "../index.ts";
 
-const url = "google.com";
+// const urls = [
+//   "pinghome.az",
+//   "pinghome.io",
+//   "google.com",
+//   "google.az",
+//   "amazon.com",
+//   "ebay.com",
+//   "microsoft.com",
+//   "apple.com",
+//   "tesla.com",
+//   "spacex.com",
+//   "nasa.gov",
+//   "facebook.com",
+//   "medappoint.app",
+//   "domen.az",
+// ];
 
-const result = await whois({ url });
+const urls = ["google.com"];
 
-console.log(result);
+for (const url of urls) {
+  const result = await whois({ url });
+  console.log(url, result);
+}
