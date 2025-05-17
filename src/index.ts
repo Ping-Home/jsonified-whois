@@ -1,72 +1,128 @@
+import { parser } from "./parser/index.ts";
+import { ianaWhoIsServer, parserInitialData } from "./constants.ts";
+import { getIpAddresses } from "./utils/getIpAddresses.ts";
+import { verifyDomain } from "./utils/verifyDomains.ts";
+import { queryWhoisServer } from "./utils/queryWhoisServer.ts";
 import tldts from "tldts";
-import net from "net";
-import { ianaParser, parsers } from "./parsers/index.ts";
-import { ianaWhoIsServer, verifyDomain } from "./utils/index.ts";
+import { getFallbackData } from "./utils/getFallbackData.ts";
+import type {
+  CollectWhoisChain,
+  ExistingRegistryData,
+  IpAddresses,
+  QueryResult,
+  WhoisClientConstructor,
+  WhoisResults,
+} from "./types/index.d.ts";
+import { logError } from "./utils/log.ts";
 
-const getWhoIsData = async (domain, suffix, whoIsServer) => {
-  const promise = new Promise<string>((resolve, reject) => {
-    let data = "";
-    const socket = net.createConnection({ host: whoIsServer, port: 43 }, () =>
-      socket.write(domain + "\r\n")
+/**
+ * A client to get basic whois information
+ */
+class WhoisClient {
+  constructor({ url, fallback, port, whoisServer }: WhoisClientConstructor) {
+    try {
+      url && verifyDomain(url);
+      this.port = port || 43;
+      this.whoisServer = whoisServer || ianaWhoIsServer;
+      this.fallbackEnabled = fallback;
+      this.domain = tldts.getDomain(url);
+      this.hostname = tldts.getHostname(url);
+    } catch (error) {
+      logError("Something went wrong when initializing the client");
+      throw error;
+    }
+  }
+
+  private port: number = 43;
+  private whoisServer: string = ianaWhoIsServer;
+  private ipAddresses: IpAddresses = {
+    ipv4: [],
+    ipv6: [],
+  };
+  private hostname: string = "";
+  private domain: string = "";
+  private fallbackEnabled: boolean = false;
+  private whoisResults: WhoisResults = [];
+
+  /**
+   * Fetch data for the instantiated domain
+   */
+  public async fetchData() {
+    this.ipAddresses = await getIpAddresses(this.hostname);
+    const response = await this.collectWhoisChain(
+      this.domain,
+      this.whoisServer
     );
-    socket.setTimeout(60000);
-    socket.on("data", (chunk) => (data += chunk));
-    socket.on("close", () => resolve(data));
-    socket.on("timeout", () => socket.destroy(new Error("Timeout")));
-    socket.on("error", reject);
-  });
-  const response = await promise;
-  console.log("adffds", whoIsServer === ianaWhoIsServer);
-  const conversionResult =
-    whoIsServer === ianaWhoIsServer
-      ? ianaParser(response)
-      : parsers(response, suffix);
-  conversionResult["raw"] = response;
-  return conversionResult;
-};
 
-const getAdditionalData = async (domain, suffix, whoIsServer, data) => {
-  if (data.hasOwnProperty(whoIsServer)) {
+    let lastQuery = { ...response.at(-1) };
+
+    if (this.fallbackEnabled) {
+      lastQuery = getFallbackData(response);
+    }
+
+    delete lastQuery.raw;
+
+    const data = {
+      queryData: response,
+      ...lastQuery,
+    };
     return data;
   }
 
-  const response = await getWhoIsData(domain, suffix, whoIsServer);
-  data[whoIsServer] = response;
+  /**
+   * Queries whois servers and collects whois info recursively
+   */
+  private async collectWhoisChain(
+    domain: string,
+    whoisServer: string
+  ): CollectWhoisChain {
+    const existingRegistryData: ExistingRegistryData = this.whoisResults.find(
+      (item) => item.queriedWhoisServer === whoisServer
+    );
 
-  if (typeof response === "string") {
-    return data;
-  }
-
-  if (response.registrar) {
-    await getAdditionalData(domain, suffix, response.registrar, data);
-  }
-};
-
-const whois = async ({ url }) => {
-  try {
-    verifyDomain(url);
-    const hostName = tldts.getDomain(url);
-    const suffix = tldts.getPublicSuffix(url);
-
-    const whoIsServer = ianaWhoIsServer;
-    const result = {};
-
-    if (!whoIsServer) {
-      throw new Error("No whois server found");
+    if (
+      existingRegistryData &&
+      (existingRegistryData.registrar.length === 0 ||
+        existingRegistryData.registrar === whoisServer)
+    ) {
+      return this.whoisResults;
     }
 
-    const response = await getWhoIsData(hostName, suffix, whoIsServer);
+    const response = await this.queryWhoisServer(domain, whoisServer);
 
-    result[whoIsServer] = response;
+    this.whoisResults.push({
+      ...response,
+      ipAddresses: this.ipAddresses,
+    });
 
-    if (response.registrar) {
-      await getAdditionalData(hostName, suffix, response.registrar, result);
+    if (!response.registrar) {
+      return this.whoisResults;
     }
 
-    return result;
-  } catch (error) {
-    console.error(error);
+    return await this.collectWhoisChain(domain, response.registrar);
   }
-};
 
-export default whois;
+  /**
+   * Query given whois server and return parsed data with matched keys.
+   */
+  private async queryWhoisServer(
+    domain: string,
+    whoisServer: string
+  ): Promise<QueryResult> {
+    try {
+      const response = await queryWhoisServer(domain, whoisServer, this.port);
+      const isIana = whoisServer === ianaWhoIsServer;
+      const conversionResult = parser(response, isIana);
+      conversionResult.domainName = this.domain;
+      conversionResult.queriedWhoisServer = whoisServer;
+      conversionResult.raw = response;
+      conversionResult.ipAddresses = this.ipAddresses;
+      return conversionResult;
+    } catch (error) {
+      logError(error);
+      return parserInitialData;
+    }
+  }
+}
+
+export default WhoisClient;

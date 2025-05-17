@@ -1,23 +1,21 @@
 {
-  "name": "ts-whois-client",
+  "name": "json-whois-client",
   "version": "0.0.1",
-  "description": "The open-source WHOIS package offers unified and consistent data.",
+  "description": "Simple open source WHOIS client that returns json",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "dev": "ts-node  ./src/index.ts"
+    "start": "node --watch --experimental-strip-types src/index.ts"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^22.1.0",
-    "@types/punycode": "^2",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "@types/node": "*",
+    "typescript": "*"
   },
   "dependencies": {
-    "tldts": "^6.1.39"
+    "tldts": "*"
   }
 }

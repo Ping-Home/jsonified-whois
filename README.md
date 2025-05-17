@@ -1,2 +1,3 @@
 # whois
-The open-source WHOIS package offers unified and consistent* data.
+
+The open-source WHOIS package offers unified and consistent\* data.

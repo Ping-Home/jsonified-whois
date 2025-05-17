@@ -1,1 +1,0 @@
-export type NormalizeDate = (date: string) => string | null

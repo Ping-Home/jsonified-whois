@@ -1,25 +1,7 @@
-import whois from "../index.ts";
+import WhoisClient from "../index.ts";
 
-// const urls = [
-//   "pinghome.az",
-//   "pinghome.io",
-//   "google.com",
-//   "google.az",
-//   "amazon.com",
-//   "ebay.com",
-//   "microsoft.com",
-//   "apple.com",
-//   "tesla.com",
-//   "spacex.com",
-//   "nasa.gov",
-//   "facebook.com",
-//   "medappoint.app",
-//   "domen.az",
-// ];
-
-const urls = ["google.com"];
-
-for (const url of urls) {
-  const result = await whois({ url });
-  console.log(url, result);
-}
+const whoisInstance = new WhoisClient({ url: "https://www.pinghome.io" });
+await whoisInstance
+  .fetchData()
+  .then((res) => console.log(res))
+  .catch((error) => console.log(error));
