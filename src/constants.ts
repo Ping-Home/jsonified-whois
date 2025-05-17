@@ -55,7 +55,13 @@ export const gtldFiledMatchers: FieldMatchers = [
     targetKey: "expiresAt",
   },
   {
-    keywords: ["name server", "nameserver", "nserver"],
+    keywords: [
+      "name server",
+      "nameserver",
+      "nserver",
+      "nameservers",
+      "hostname",
+    ],
     targetKey: "nameServers",
     isArray: true,
   },
