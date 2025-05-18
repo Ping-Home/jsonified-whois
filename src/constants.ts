@@ -1,5 +1,7 @@
 import type { FieldMatchers, ParserResult } from "./types/index.js";
 
+export const timeoutSeconds = 60;
+
 export const ianaWhoIsServer = "whois.iana.org";
 
 export const parserInitialData: ParserResult = {

@@ -1,4 +1,5 @@
 import net from "net";
+import { timeoutSeconds } from "../constants.ts";
 
 type GetWhoisData = (
   domain: string,
@@ -16,7 +17,7 @@ export const queryWhoisServer: GetWhoisData = async (
     const socket = net.createConnection({ host: whoisServer, port: port }, () =>
       socket.write(domain + "\r\n")
     );
-    socket.setTimeout(60000);
+    socket.setTimeout(timeoutSeconds * 1000);
     socket.on("data", (chunk) => (data += chunk));
     socket.on("close", () => resolve(data));
     socket.on("timeout", () => socket.destroy(new Error("Timeout")));

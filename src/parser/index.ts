@@ -6,6 +6,8 @@ import {
 import type { ParserResult } from "../types/index.d.ts";
 import { normalizer } from "../utils/normalizer.ts";
 
+const nameServers = "nameServers";
+
 export const parser = (data: string, isIana: boolean) => {
   const splitter = data.endsWith("\r\n") ? "\r\n" : "\n";
 
@@ -22,18 +24,23 @@ export const parser = (data: string, isIana: boolean) => {
     const trimmedValue = value.trim();
 
     for (const matcher of matchers) {
-      if (matcher.keywords.some((kw) => normalizedKey.includes(kw))) {
-        if (matcher.targetKey === "nameServers") {
-          const values = trimmedValue
-            .split("\r\n")
-            .map((v) => v.trim())
-            .filter(Boolean);
-          result.nameServers = [...(result.nameServers || []), ...values];
-        } else {
-          result[matcher.targetKey] = trimmedValue;
-        }
-        break;
+      const includesKeyword = matcher.keywords.some((kw) =>
+        normalizedKey.includes(kw)
+      );
+      if (!includesKeyword) {
+        continue;
       }
+
+      if (matcher.targetKey === nameServers) {
+        const values = trimmedValue
+          .split("\r\n")
+          .map((v) => v.trim())
+          .filter(Boolean);
+        result.nameServers = [...(result.nameServers || []), ...values];
+      }
+
+      result[matcher.targetKey] = trimmedValue;
+      break;
     }
   });
 

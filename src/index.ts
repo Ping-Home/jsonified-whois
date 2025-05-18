@@ -28,7 +28,7 @@ class WhoisClient {
       this.domain = tldts.getDomain(url);
       this.hostname = tldts.getHostname(url);
     } catch (error) {
-      logError("Something went wrong when initializing the client");
+      logError("Something went wrong when initializing the client \n");
       throw error;
     }
   }

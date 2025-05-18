@@ -12,7 +12,7 @@ const getIpv6: IpResult = async (domain) => {
   try {
     return await resolve6(domain);
   } catch (error) {
-    logWarning("Unable to find IPv6 addresses for " + domain);
+    logWarning("Unable to find IPv6 addresses for " + domain + "\n");
     return [];
   }
 };
@@ -21,7 +21,7 @@ const getIpv4: IpResult = async (domain: string) => {
   try {
     return await resolve4(domain);
   } catch (error) {
-    logWarning("Unable to find IPv4 addresses for " + domain);
+    logWarning("Unable to find IPv4 addresses for " + domain + "\n");
     return [];
   }
 };
