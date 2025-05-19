@@ -66,7 +66,7 @@ class WhoisClient {
       queryData: response,
       ...lastQuery,
     };
-    return data;
+    return JSON.stringify(data);
   }
 
   /**

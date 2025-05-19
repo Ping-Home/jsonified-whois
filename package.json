@@ -1,7 +1,7 @@
 {
-  "name": "json-whois-client",
+  "name": "whois",
   "version": "0.0.1",
-  "description": "Simple open source WHOIS client that returns json",
+  "description": "A simple, open-source WHOIS client for Node.js that returns unified data as json",
   "main": "index.js",
   "type": "module",
   "scripts": {

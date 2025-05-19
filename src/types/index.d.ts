@@ -38,6 +38,8 @@ export interface WhoisClientConstructor {
   whoisServer?: string;
 }
 
+export type WhoisClientConfig = WhoisClientConstructor;
+
 export type WhoisResults = Array<QueryResult>;
 
 export type CollectWhoisChain = Promise<WhoisResults | Promise<WhoisResults>>;
