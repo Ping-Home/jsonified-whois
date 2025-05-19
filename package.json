@@ -1,0 +1,21 @@
+{
+  "name": "json-whois-client",
+  "version": "0.0.1",
+  "description": "Simple open source WHOIS client that returns json",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node --watch --experimental-strip-types src/index.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "*",
+    "typescript": "*"
+  },
+  "dependencies": {
+    "tldts": "*"
+  }
+}
