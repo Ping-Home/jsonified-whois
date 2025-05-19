@@ -1,4 +1,4 @@
-# simple-whois
+# jsonified-whois
 
 A simple, open-source WHOIS client for Node.js that returns unified data as json.
 
@@ -13,13 +13,13 @@ A simple, open-source WHOIS client for Node.js that returns unified data as json
 ## Installation
 
 ```sh
-npm install simple-whois
+npm install jsonified-whois
 ```
 
 or
 
 ```sh
-yarn add simple-whois
+yarn add jsonified-whois
 ```
 
 ## Usage
