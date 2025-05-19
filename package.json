@@ -9,8 +9,11 @@
     "build": "tsc",
     "start": "node --watch --experimental-strip-types src/index.ts"
   },
-  "author": "",
+  "repository": "https://github.com/Ping-Home/jsonified-whois",
+  "author": "ISnowFoxI",
   "license": "MIT",
+  "bugs": "https://github.com/Ping-Home/jsonified-whois/issues",
+  "homepage": "https://github.com/Ping-Home/jsonified-whois#readme",
   "devDependencies": {
     "@types/node": "*",
     "typescript": "*"
