@@ -37,6 +37,7 @@ export const parser = (data: string, isIana: boolean) => {
           .map((v) => v.trim())
           .filter(Boolean);
         result.nameServers = [...(result.nameServers || []), ...values];
+        break;
       }
 
       result[matcher.targetKey] = trimmedValue;
