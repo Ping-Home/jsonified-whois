@@ -1,5 +1,5 @@
 {
-  "name": "whois",
+  "name": "simple-whois",
   "version": "0.0.1",
   "description": "A simple, open-source WHOIS client for Node.js that returns unified data as json",
   "main": "index.js",
