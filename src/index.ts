@@ -24,9 +24,9 @@ class WhoisClient {
       url && verifyDomain(url);
       this.port = port || 43;
       this.whoisServer = whoisServer || ianaWhoIsServer;
-      this.fallbackEnabled = fallback;
-      this.domain = tldts.getDomain(url);
-      this.hostname = tldts.getHostname(url);
+      this.fallbackEnabled = fallback || false;
+      this.domain = tldts.getDomain(url) || "";
+      this.hostname = tldts.getHostname(url) || "";
     } catch (error) {
       logError("Something went wrong when initializing the client \n");
       throw error;
