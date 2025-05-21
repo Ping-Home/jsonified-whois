@@ -50,4 +50,4 @@ export type GetFallbackData = (results: WhoisResults) => QueryResult;
 
 export type VerifyDomain = (domain: string) => void;
 
-export type Log = (message: string) => void;
+export type Log = (message: unknown) => void;
