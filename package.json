@@ -1,6 +1,6 @@
 {
   "name": "jsonified-whois",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A simple, open-source WHOIS client for Node.js that returns unified data as json",
   "main": "./dist/index.js",
   "type": "module",
