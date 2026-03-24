@@ -218,7 +218,7 @@ var getFallbackData = (results) => {
   let counter = [];
   for (let index in reversedArr) {
     counter[index] = 0;
-    for (let key in reversedArr[index]) {
+    for (const key of Object.keys(reversedArr[index])) {
       if (reversedArr[index][key]) {
         continue;
       }

@@ -25,7 +25,7 @@ export type Normalizer = (str: string) => string;
 
 export type FieldMatcher = {
   keywords: Array<string>;
-  targetKey: string;
+  targetKey: keyof Omit<ParserResult,'ipAddresses'>;
   isArray?: boolean;
 };
 
