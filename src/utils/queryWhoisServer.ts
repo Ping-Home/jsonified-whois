@@ -18,7 +18,7 @@ export const queryWhoisServer: GetWhoisData = async (
       socket.write(domain + "\r\n")
     );
     socket.setTimeout(timeoutSeconds * 1000);
-    socket.on("data", (chunk) => (data += chunk));
+    socket.on("data", (chunk:string) => (data += chunk));
     socket.on("close", () => resolve(data));
     socket.on("timeout", () => socket.destroy(new Error("Timeout")));
     socket.on("error", reject);

@@ -3,7 +3,7 @@ import {
   ianaFieldMatchers,
   parserInitialData,
 } from "../constants.ts";
-import type { ParserResult } from "../types/index.d.ts";
+import type {  ParserResult } from "../types/index.d.ts";
 import { normalizer } from "../utils/normalizer.ts";
 
 const nameServers = "nameServers";
